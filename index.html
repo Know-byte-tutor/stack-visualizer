@@ -1,87 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Stack Visualizer</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mobile Stack Visualizer</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #f0f4c3, #ffffff);
-      text-align: center;
+      margin: 0;
+      background: linear-gradient(to bottom, #e0f7fa, #ffffff);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
       padding: 20px;
+      box-sizing: border-box;
     }
 
     h1 {
-      color: #33691e;
+      color: #00796b;
+      font-size: 2rem;
+      margin-bottom: 10px;
     }
 
-    .settings {
-      margin: 20px;
+    .stack-settings,
+    .stack-controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 10px 0;
     }
 
-    .settings input {
-      padding: 6px 10px;
-      margin: 5px;
+    .stack-settings input,
+    .stack-controls button {
+      width: 80vw;
+      max-width: 300px;
+      padding: 12px;
+      margin: 6px;
       font-size: 16px;
+      border: 2px solid #004d40;
+      border-radius: 8px;
     }
 
-    .controls button {
-      padding: 10px 15px;
-      margin: 4px;
-      font-size: 14px;
-      background: #689f38;
-      border: none;
-      border-radius: 6px;
+    .stack-controls button {
+      background: #00796b;
       color: white;
+      border: none;
       cursor: pointer;
+      transition: background 0.3s;
     }
 
-    .controls button:hover {
-      background: #33691e;
+    .stack-controls button:hover {
+      background: #004d40;
     }
 
-    .stack-container {
+    .stack-box {
+      height: 50vh;
+      width: 80vw;
+      max-width: 300px;
       display: flex;
       flex-direction: column-reverse;
       align-items: center;
       justify-content: flex-end;
-      min-height: 200px;
-      padding: 20px;
-      border: 2px dashed #558b2f;
-      margin-top: 20px;
-      background-color: #f1f8e9;
-      border-radius: 10px;
+      padding: 10px;
+      margin-top: 10px;
+      background: #e0f2f1;
+      border: 2px dashed #004d40;
+      border-radius: 12px;
+      overflow-y: auto;
     }
 
     .box {
-      width: 100px;
-      height: 50px;
-      margin: 5px;
-      line-height: 50px;
-      font-weight: bold;
+      width: 80%;
+      background: #4db6ac;
       color: white;
-      background-color: #8bc34a;
+      font-weight: bold;
+      text-align: center;
+      padding: 12px;
+      margin: 5px 0;
       border-radius: 8px;
-      transition: all 0.4s ease;
+      transition: transform 0.3s ease;
     }
 
     #message {
       color: red;
       margin-top: 10px;
+      min-height: 24px;
       font-weight: bold;
+    }
+
+    @media screen and (orientation: landscape) {
+      body {
+        flex-direction: row;
+        justify-content: space-evenly;
+      }
+      .stack-settings,
+      .stack-controls {
+        width: 40%;
+      }
+      .stack-box {
+        width: 40%;
+        height: 90vh;
+      }
     }
   </style>
 </head>
 <body>
 
-  <h1>🧱 Stack Visualizer</h1>
+  <h1>📱 Stack Visualizer</h1>
 
-  <div class="settings">
-    <input type="number" id="maxSize" placeholder="Max Size" min="1" />
-    <input type="text" id="valueInput" placeholder="Enter value" />
+  <div class="stack-settings">
+    <input type="number" id="maxSize" placeholder="Max Stack Size" min="1" />
+    <input type="text" id="valueInput" placeholder="Enter Value" />
   </div>
 
-  <div class="controls">
+  <div class="stack-controls">
     <button onclick="push()">Push ⬆️</button>
     <button onclick="pop()">Pop ⬇️</button>
     <button onclick="peek()">Peek 👁️</button>
@@ -90,7 +123,7 @@
 
   <div id="message"></div>
 
-  <div class="stack-container" id="stackDisplay"></div>
+  <div class="stack-box" id="stackDisplay"></div>
 
   <script>
     let stack = [];
@@ -119,23 +152,23 @@
     function push() {
       getMaxSize();
       const val = document.getElementById('valueInput').value.trim();
-      if (!val) return showMessage("Enter a value");
-      if (stack.length >= max) return showMessage("Stack Overflow");
+      if (!val) return showMessage("⚠️ Enter a value");
+      if (stack.length >= max) return showMessage("⚠️ Stack Overflow");
       stack.push(val);
       updateDisplay();
       showMessage('');
     }
 
     function pop() {
-      if (stack.length === 0) return showMessage("Stack Underflow");
+      if (stack.length === 0) return showMessage("⚠️ Stack Underflow");
       stack.pop();
       updateDisplay();
       showMessage('');
     }
 
     function peek() {
-      if (stack.length === 0) return showMessage("Stack is empty");
-      showMessage("Top element: " + stack[stack.length - 1]);
+      if (stack.length === 0) return showMessage("⚠️ Stack is empty");
+      showMessage("👁️ Top element: " + stack[stack.length - 1]);
     }
 
     function reset() {
@@ -144,5 +177,6 @@
       showMessage('');
     }
   </script>
+
 </body>
 </html>
