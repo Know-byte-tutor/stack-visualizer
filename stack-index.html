@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>🔁 Animated Stack Visualizer</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #e8f5e9);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 1rem;
+    }
+
+    .stack-label {
+      font-weight: bold;
+      color: #00695c;
+      margin-bottom: 8px;
+      font-size: 1rem;
+    }
+
+    .stack-container {
+      background: #ffffff;
+      border: 3px solid #4db6ac;
+      border-radius: 15px;
+      width: 200px;
+      height: 300px;
+      position: relative;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .block {
+      width: 180px;
+      height: 40px;
+      background: linear-gradient(135deg, #26c6da, #00acc1);
+      color: white;
+      text-align: center;
+      line-height: 40px;
+      font-weight: bold;
+      border-radius: 8px;
+      position: absolute;
+      left: 10px;
+      transition: top 0.4s ease, opacity 0.3s ease;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 15px;
+    }
+
+    input {
+      padding: 8px 10px;
+      font-size: 16px;
+      border: 2px solid #80cbc4;
+      border-radius: 5px;
+      outline: none;
+    }
+
+    button {
+      background: #00897b;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #00695c;
+    }
+
+    #message {
+      margin-top: 15px;
+      min-height: 20px;
+      font-weight: bold;
+      color: #d84315;
+    }
+
+    .footer {
+      margin-top: 30px;
+      color: #607d8b;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📦 Stack Visualizer - All Operations</h1>
+
+  <div class="stack-label">⬆️ Top</div>
+  <div class="stack-container" id="stack"></div>
+  <div class="stack-label">⬇️ Bottom</div>
+
+  <div class="controls">
+    <input type="text" id="value" placeholder="Enter value" />
+    <button onclick="push()">Push</button>
+    <button onclick="pop()">Pop</button>
+    <button onclick="peek()">Peek</button>
+    <button onclick="isEmpty()">Is Empty?</button>
+    <button onclick="clearStack()">Clear</button>
+  </div>
+
+  <div id="message"></div>
+  <div class="footer">Crafted for 🚀 YouTube DSA Series</div>
+
+  <script>
+    const stack = [];
+    const maxSize = 6;
+
+    function push() {
+      const input = document.getElementById('value');
+      const value = input.value.trim();
+      const message = document.getElementById('message');
+
+      if (!value) {
+        message.textContent = '⚠️ Enter a value to push!';
+        return;
+      }
+
+      if (stack.length >= maxSize) {
+        message.textContent = '🚫 Stack Overflow!';
+        return;
+      }
+
+      const block = document.createElement('div');
+      block.className = 'block';
+      block.textContent = value;
+      const top = 250 - stack.length * 45;
+      block.style.top = `${top}px`;
+
+      document.getElementById('stack').appendChild(block);
+      stack.push(block);
+
+      input.value = '';
+      message.textContent = `✅ Pushed "${value}"`;
+    }
+
+    function pop() {
+      const message = document.getElementById('message');
+      if (stack.length === 0) {
+        message.textContent = '🚫 Stack Underflow!';
+        return;
+      }
+
+      const block = stack.pop();
+      block.style.top = '310px';
+      block.style.opacity = 0;
+
+      setTimeout(() => block.remove(), 500);
+      message.textContent = `🗑️ Popped "${block.textContent}"`;
+    }
+
+    function peek() {
+      const message = document.getElementById('message');
+      if (stack.length === 0) {
+        message.textContent = '👀 Stack is empty!';
+      } else {
+        const topValue = stack[stack.length - 1].textContent;
+        message.textContent = `👁️ Top: "${topValue}"`;
+      }
+    }
+
+    function isEmpty() {
+      const message = document.getElementById('message');
+      message.textContent = stack.length === 0
+        ? '✅ Stack is EMPTY!'
+        : `❌ Stack has ${stack.length} item(s)`;
+    }
+
+    function clearStack() {
+      const message = document.getElementById('message');
+      while (stack.length > 0) {
+        const block = stack.pop();
+        block.style.top = '310px';
+        block.style.opacity = 0;
+        setTimeout(() => block.remove(), 500);
+      }
+      message.textContent = '🧹 Stack Cleared!';
+    }
+  </script>
+
+</body>
+</html>
