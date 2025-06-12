@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mobile Stack Visualizer</title>
+  <title>Responsive Stack Visualizer</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -12,7 +12,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
       padding: 20px;
       box-sizing: border-box;
     }
@@ -29,14 +29,15 @@
       flex-direction: column;
       align-items: center;
       margin: 10px 0;
+      width: 100%;
+      max-width: 400px;
     }
 
     .stack-settings input,
     .stack-controls button {
-      width: 80vw;
-      max-width: 300px;
+      width: 100%;
       padding: 12px;
-      margin: 6px;
+      margin: 6px 0;
       font-size: 16px;
       border: 2px solid #004d40;
       border-radius: 8px;
@@ -56,8 +57,8 @@
 
     .stack-box {
       height: 50vh;
-      width: 80vw;
-      max-width: 300px;
+      width: 100%;
+      max-width: 400px;
       display: flex;
       flex-direction: column-reverse;
       align-items: center;
@@ -79,7 +80,22 @@
       padding: 12px;
       margin: 5px 0;
       border-radius: 8px;
-      transition: transform 0.3s ease;
+      transition: transform 0.3s ease, opacity 0.3s;
+    }
+
+    .box.animate {
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     #message {
@@ -88,26 +104,11 @@
       min-height: 24px;
       font-weight: bold;
     }
-
-    @media screen and (orientation: landscape) {
-      body {
-        flex-direction: row;
-        justify-content: space-evenly;
-      }
-      .stack-settings,
-      .stack-controls {
-        width: 40%;
-      }
-      .stack-box {
-        width: 40%;
-        height: 90vh;
-      }
-    }
   </style>
 </head>
 <body>
 
-  <h1>📱 Stack Visualizer</h1>
+  <h1>📦 Stack Visualizer</h1>
 
   <div class="stack-settings">
     <input type="number" id="maxSize" placeholder="Max Stack Size" min="1" />
@@ -134,7 +135,7 @@
       display.innerHTML = '';
       stack.forEach(item => {
         const box = document.createElement('div');
-        box.className = 'box';
+        box.className = 'box animate';
         box.textContent = item;
         display.appendChild(box);
       });
@@ -151,10 +152,12 @@
 
     function push() {
       getMaxSize();
-      const val = document.getElementById('valueInput').value.trim();
+      const input = document.getElementById('valueInput');
+      const val = input.value.trim();
       if (!val) return showMessage("⚠️ Enter a value");
       if (stack.length >= max) return showMessage("⚠️ Stack Overflow");
       stack.push(val);
+      input.value = ''; // Clear input field
       updateDisplay();
       showMessage('');
     }
@@ -175,6 +178,7 @@
       stack = [];
       updateDisplay();
       showMessage('');
+      document.getElementById('valueInput').value = '';
     }
   </script>
 
